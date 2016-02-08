@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="me.rahul.plugins.audioFrequency"
+        version="1.0.3"
+        xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <name>AudioFrequency</name>
+
+    <description>Frequncy Detection</description>
+
+     <license>Apache 2.0</license>
+
+     <author>Rahul Pandey</author>
+
+     <engines>
+        <engine name="cordova" version=">=3.0.0" />
+     </engines>
+
+    <js-module name="CDVPitchDetection" src="www/pitchDetect.js">
+        <clobbers target="window.plugins.pitchDetect" />
+    </js-module>
+
+
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="CDVPitchDetection">
+                <param name="ios-package" value="CDVPitchDetection" />
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/CDVPitchDetection.h" />
+        <header-file src="src/ios/CADebugMacros.h" />
+        <header-file src="src/ios/CAStreamBasicDescription.h" />
+        <header-file src="src/ios/CAXException.h" />
+        <header-file src="src/ios/RIOInterface.h" />
+        <header-file src="src/ios/CADebugPrintf.h"/>
+        <source-file src="src/ios/CADebugPrintf.cpp"/>
+        <source-file src="src/ios/CAXException.cpp" />
+        <source-file src="src/ios/RIOInterface.mm" compiler-flags="-fno-objc-arc" />
+        <source-file src="src/ios/CDVPitchDetection.m" compiler-flags="-fno-objc-arc" />
+        
+<!--        <framework src="MediaPlayer.framework" weak="true" />-->
+        <framework src="Foundation.framework" weak="true" />
+        <framework src="AVFoundation.framework" weak="true" />
+        <framework src="AudioToolbox.framework" weak="true" />
+        <framework src="CoreMedia.framework" weak="true" />
+        <framework src="Accelerate.framework" weak="true" />
+        
+    </platform>
+</plugin>
