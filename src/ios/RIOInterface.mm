@@ -18,6 +18,7 @@
 @synthesize sampleRate;
 @synthesize frequency;
 
+
 float MagnitudeSquared(float x, float y);
 void ConvertInt16ToFloat(RIOInterface* THIS, void *buf, float *outputBuf, size_t capacity);
 
@@ -33,7 +34,7 @@ void ConvertInt16ToFloat(RIOInterface* THIS, void *buf, float *outputBuf, size_t
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setActive:NO error:nil];
     
-    [super dealloc];
+   // [super dealloc];
 }
 
 #pragma mark -
@@ -98,7 +99,7 @@ OSStatus RenderFFTCallback (void					*inRefCon,
                             UInt32 						inNumberFrames,
                             AudioBufferList				*ioData)
 {
-    RIOInterface* THIS = (RIOInterface *)inRefCon;
+    RIOInterface* THIS = (__bridge RIOInterface *)inRefCon;
     COMPLEX_SPLIT A = THIS->A;
     void *dataBuffer = THIS->dataBuffer;
     float *outputBuffer = THIS->outputBuffer;
@@ -178,8 +179,10 @@ OSStatus RenderFFTCallback (void					*inRefCon,
        // NSLog(@"sample rate : %f", THIS->sampleRate);
         //NSLog(@"Buffer Capacity : %d", bufferCapacity);
         // Update the UI with our newly acquired frequency value.
-        [THIS->listener frequencyChangedWithValue:bin*(THIS->sampleRate/bufferCapacity)];
-        //printf("Dominant frequency: %f   bin: %d \n", bin*(THIS->sampleRate/bufferCapacity), bin);
+        //THIS->listener = [CDVPitchDetection sharedInstance];
+        CDVPitchDetection* pitch = [CDVPitchDetection sharedInstance];
+        [pitch frequencyChangedWithValue:bin*(THIS->sampleRate/bufferCapacity)];
+        //printf("Dominant frequency: %f \n", bin*(THIS->sampleRate/bufferCapacity));
     }
     
     
@@ -297,14 +300,14 @@ void ConvertInt16ToFloat(RIOInterface* THIS, void *buf, float *outputBuf, size_t
     AUGraphNodeInfo(processingGraph, ioNode, NULL, &ioUnit);
     
     // Initialize below.
-    AURenderCallbackStruct callbackStruct = {0};
+    __unsafe_unretained AURenderCallbackStruct callbackStruct = {0};
     UInt32 enableInput;
     UInt32 enableOutput;
     
     // Enable input and disable output.
     enableInput = 1; enableOutput = 0;
     callbackStruct.inputProc = RenderFFTCallback;
-    callbackStruct.inputProcRefCon = self;
+    callbackStruct.inputProcRefCon = (__bridge void*)self;
     
     err = AudioUnitSetProperty(ioUnit, kAudioOutputUnitProperty_EnableIO,
                                kAudioUnitScope_Input,
@@ -423,20 +426,20 @@ static RIOInterface *sharedInstance = nil;
     return self;
 }
 
-- (id)retain {
-    return self;
-}
-
-- (unsigned)retainCount {
-    return UINT_MAX;  // denotes an object that cannot be released
-}
-
-- (oneway void)release {
-    //do nothing
-}
-
-- (id)autorelease {
-    return self;
-}
+//- (id)retain {
+//    return self;
+//}
+//
+//- (unsigned)retainCount {
+//    return UINT_MAX;  // denotes an object that cannot be released
+//}
+//
+//- (oneway void)release {
+//    //do nothing
+//}
+//
+//- (id)autorelease {
+//    return self;
+//}
 
 @end

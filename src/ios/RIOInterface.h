@@ -36,8 +36,8 @@
 
 @interface RIOInterface : NSObject {
 	//UIViewController *selectedViewController;
-	__unsafe_unretained CDVPlugin *listener;
-	
+	CDVPlugin *listener;
+
 	AUGraph processingGraph;
 	AudioUnit ioUnit;
 	AudioBufferList* bufferList;
@@ -58,7 +58,8 @@
 
 @property(nonatomic, assign) id<AVAudioPlayerDelegate> audioPlayerDelegate;
 @property(nonatomic, assign) id<AVAudioSessionDelegate> audioSessionDelegate;
-@property(nonatomic, assign) CDVPlugin *listener;
+@property(strong) CDVPlugin *listener;
+
 
 @property(assign) float sampleRate;
 @property(assign) float frequency;

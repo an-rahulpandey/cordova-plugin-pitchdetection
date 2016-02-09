@@ -14,17 +14,17 @@
 @interface CDVPitchDetection : CDVPlugin {
     
 	BOOL isListening;
-	__unsafe_unretained RIOInterface *rioRef;
+	RIOInterface *rioRef;
 	float currentFrequency;
     NSMutableArray* registeredFrequencies;
 }
 
 
 
-@property(nonatomic, assign) RIOInterface *rioRef;
+@property(strong) RIOInterface *rioRef;
 @property(nonatomic, assign) float currentFrequency;
 @property(assign) BOOL isListening;
-@property(nonatomic, assign) NSMutableArray *registeredFrequencies;
+@property(nonatomic, strong) NSMutableArray *registeredFrequencies;
 
 - (void)startListener:(CDVInvokedUrlCommand*)command;
 - (void)stopListener:(CDVInvokedUrlCommand*)command;
@@ -32,5 +32,7 @@
 
 - (void)frequencyChangedWithValue:(float)newFrequency;
 - (void)updateFrequency;
+#pragma mark Singleton Methods
++ (CDVPitchDetection *)sharedInstance;
 
 @end
